@@ -8,7 +8,7 @@ import (
 type Users struct {
 	gorm.Model
 	Id        uint
-	Username  string
+	LoginId   string
 	Password  string
 	Email     string
 	CreatedAt string
