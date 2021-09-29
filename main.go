@@ -5,14 +5,24 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	_ "go.uber.org/zap"
-	//"github.com/jinzhu/gorm"
-	//_ "github.com/jinzhu/gorm/dialects/mysql"
-	"log"
+	"goMyWebSite/db"
+	"goMyWebSite/middleware"
+	"goMyWebSite/model"
 	"net/http"
 )
 
 func main() {
+	// DBから取得するサンプル
+	connection := db.Connection()
+	defer connection.Close()
 
+	var user model.Users
+	result := connection.First(&user, 1).Related(&user.Id)
+	fmt.Println("##### connection result #####")
+	fmt.Println(result.Value)
+	fmt.Println("##### connection result #####")
+
+	// zapロガーサンプル
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 
@@ -28,7 +38,7 @@ func main() {
 	//router.LoadHTMLFiles("templates/template1.html", "templates/template2.html")
 
 	// ミドルウエアを使う
-	router.Use(commonMiddleware())
+	router.Use(middleware.CommonMiddleware())
 
 	// index
 	router.GET("/", func(c *gin.Context) {
@@ -57,7 +67,7 @@ func main() {
 	})
 
 	// file list
-	router.GET("/file", authCheckMiddleware(), func(c *gin.Context) {
+	router.GET("/file", middleware.AuthCheckMiddleware(), func(c *gin.Context) {
 		c.HTML(http.StatusOK, "file.tmpl", gin.H{
 			"title": "file list page",
 		})
@@ -65,38 +75,24 @@ func main() {
 	})
 
 	// file upload
-	router.GET("/file/upload", authCheckMiddleware(), func(c *gin.Context) {
+	router.GET("/file/upload", middleware.AuthCheckMiddleware(), func(c *gin.Context) {
 		c.HTML(http.StatusOK, "file_upload.tmpl", gin.H{
 			"title": "file upload page",
 		})
 		fmt.Println("/file/upload")
 	})
 
+	// zapでのログの出力サンプル
+	logger, _ = zap.NewProduction()
+	defer logger.Sync()
+
+	logger.Debug("debug")
+	logger.Info("info", zap.String("key", "value"))
+
+	sugar = logger.Sugar()
+	sugar.Warn("warning sugar")
+	sugar.Error("error sugar")
+
 	//起動とサーバーポートの指定
 	router.Run(":8080")
 }
-
-func commonMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		log.Println("before logic")
-		c.Next()
-		log.Println("after logic")
-	}
-}
-
-func authCheckMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		log.Println("before authCheckMiddleware")
-		c.Next()
-		log.Println("after authCheckMiddleware")
-	}
-}
-
-//func Connection() *gorm.DB {
-//	db, err := gorm.Open("mysql", "root:@tcp(db:3306)/gin_app?charset=utf8&parseTime=True&loc=Local")
-//	if err != nil {
-//		panic("failed to connect database")
-//	}
-//	db.LogMode(true)
-//	return db
-//}
