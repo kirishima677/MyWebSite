@@ -26,6 +26,12 @@ $ go build -tags 'postgres' -ldflags="-X main.Version=$(git describe --tags)" -o
 $ go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@$TAG  
 ````
 
+### Ginフレームワーク
+````
+$ go get github.com/gin-gonic/gin  
+$ go get github.com/gin-contrib/sessions  
+````
+
 ### Gorm関連（DB接続）
 v1
 ````
