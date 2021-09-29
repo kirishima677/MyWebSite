@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 	"go.uber.org/zap"
 	_ "go.uber.org/zap"
 	"goMyWebSite/db"
@@ -11,7 +12,48 @@ import (
 	"net/http"
 )
 
+// Connection
+func Connection() redis.Conn {
+	const Addr = "127.0.0.1:6379"
+
+	c, err := redis.Dial("tcp", Addr)
+	if err != nil {
+		panic(err)
+	}
+	return c
+}
+
+// データの登録(Redis: SET key value)
+func Set(key, value string, c redis.Conn) string {
+	res, err := redis.String(c.Do("SET", key, value))
+	if err != nil {
+		panic(err)
+	}
+	return res
+}
+
+// データの取得(Redis: GET key)
+func Get(key string, c redis.Conn) string {
+	res, err := redis.String(c.Do("GET", key))
+	if err != nil {
+		panic(err)
+	}
+	return res
+}
+
 func main() {
+	// Redis接続
+	c := Connection()
+	defer c.Close()
+
+	// データの登録(Redis: SET key value)
+	res_set := Set("sample-key", "sample-value", c)
+	fmt.Println(res_set) // OK
+
+	// データの取得(Redis: GET key)
+	res_get := Get("sample-key", c)
+	fmt.Println(res_get) // sample-value
+
 	// DBから取得するサンプル
 	connection := db.Connection()
 	defer connection.Close()

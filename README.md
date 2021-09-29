@@ -44,3 +44,8 @@ https://github.com/stretchr/testify
 ````
 $ go get github.com/stretchr/testify
 ````
+### go-redis install
+https://onemuri.space/note/vo6tcv8fq/  
+````
+$ go get github.com/gomodule/redigo/redis
+````
