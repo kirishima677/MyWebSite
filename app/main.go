@@ -10,9 +10,11 @@ import (
 	"go.uber.org/zap"
 	_ "go.uber.org/zap"
 	"goMyWebSite/db"
-	"goMyWebSite/middleware"
 	"goMyWebSite/model"
 	"goMyWebSite/redis"
+
+	"goMyWebSite/middleware"
+
 	"goMyWebSite/services/authntication"
 	"net/http"
 )
@@ -69,7 +71,6 @@ func main() {
 	router.Use(sessions.Sessions("mysession", store))
 
 	router.LoadHTMLGlob("templates/*")
-	//router.LoadHTMLFiles("templates/template1.html", "templates/template2.html")
 
 	// ミドルウエアを使う
 	router.Use(middleware.CommonMiddleware())
@@ -96,30 +97,30 @@ func main() {
 		fmt.Println(loginId)
 		fmt.Println(password)
 
-		var user model.Users
-		if result := connection.Where("login_id = ? and password = ?", loginId, password).First(&user); result.Error != nil {
-			// ここでエラーハンドリング
-			fmt.Println("error")
-			// 認証できなかったらログインフォームの表示
-			c.HTML(http.StatusOK, "login.tmpl", gin.H{
-				"title":   "login page",
-				"message": "",
-			})
-		} else {
-			// レコードが存在した
-			fmt.Println("##### connection result #####")
-			fmt.Println(result.Value)
-			fmt.Println("##### connection result #####")
-
-			var random, _ = MakeRandomStr(10)
-
-			fmt.Println(random)
-
-			//セッションにデータを格納する
-			authntication.Login(c, random)
-
-			fmt.Println("Login")
-		}
+		//var user model.Users
+		//if result := connection.Where("login_id = ? and password = ?", loginId, password).First(&user); result.Error != nil {
+		//	// ここでエラーハンドリング
+		//	fmt.Println("error")
+		//	// 認証できなかったらログインフォームの表示
+		//	c.HTML(http.StatusOK, "login.tmpl", gin.H{
+		//		"title":   "login page",
+		//		"message": "",
+		//	})
+		//} else {
+		//	// レコードが存在した
+		//	fmt.Println("##### connection result #####")
+		//	fmt.Println(result.Value)
+		//	fmt.Println("##### connection result #####")
+		//
+		//	var random, _ = MakeRandomStr(10)
+		//
+		//	fmt.Println(random)
+		//
+		//	//セッションにデータを格納する
+		//	authntication.Login(c, random)
+		//
+		//	fmt.Println("Login")
+		//}
 
 		fmt.Println("/login POST")
 	})
@@ -128,7 +129,7 @@ func main() {
 	router.GET("/logout", func(c *gin.Context) {
 		authntication.Logout(c)
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"title": "Main website",
+			"title": "Main website11",
 		})
 		fmt.Println("/logout")
 	})
@@ -154,7 +155,7 @@ func main() {
 	})
 
 	//起動とサーバーポートの指定
-	router.Run(":8080")
+	router.Run(":3000")
 }
 
 func MakeRandomStr(digit uint32) (string, error) {

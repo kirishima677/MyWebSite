@@ -1,0 +1,34 @@
+settings:
+  legacy:
+    force: true
+    interval: 0s
+server:
+  status: true
+  open: false
+  port: 5002
+  host: localhost
+schema:
+  - name: app
+    path: .
+    args:
+      - main.go
+    commands:
+      install:
+        status: true
+        method: go build -o app.out
+      run:
+        status: true
+        method: ./app.out
+    watcher:
+      extensions:
+        - go
+      paths:
+        - /
+      scripts:
+        - type: before
+          command: taskkill /F /im app.out
+      ignored_paths:
+        - .git
+        - .realize
+        - vendor
+        - .history
