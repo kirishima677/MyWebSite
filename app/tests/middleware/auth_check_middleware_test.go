@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"goMyWebSite/middleware"
+	"goMyWebSite/app/middleware"
 	"testing"
 )
 

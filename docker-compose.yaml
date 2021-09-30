@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  golang:
+    tty: true
+    build: "."
+    volumes:
+      - ./app:/go/src/github.com/docker_go_nginx/app
+    ports:
+      - "3000"
+    command: bash -c "cd app && realize s"
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - "golang"
+  # MySQL
+  db:
+    image: mysql:5.7
+    container_name: mysql_host_57
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_database
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./mysql/db/data:/var/lib/mysql
+      - ./mysql/db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/db/sql:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./redis/data/redis:/data"
+
+  # phpMyAdmin
+#  phpmyadmin:
+#    container_name: test_phpmyadmin
+#    image: phpmyadmin/phpmyadmin
+#    environment:
+#      - PMA_ARBITRARY=1
+#      - PMA_HOSTS=mysql_host
+#      - PMA_USER=root
+#      - PMA_PASSWORD=root
+#    ports:
+#      - "8081:80"
