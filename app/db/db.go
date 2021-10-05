@@ -10,7 +10,7 @@ func Connection() *gorm.DB {
 	db, err := gorm.Open("mysql", "root:root@tcp(mysql_host_57:3306)/test_database?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
 		fmt.Println(err)
-		panic("failed to connect database")
+		//		panic("failed to connect database")
 	}
 	db.LogMode(true)
 	return db

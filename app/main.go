@@ -70,7 +70,10 @@ func main() {
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
 
-	router.LoadHTMLGlob("templates/*")
+	router.Static("/assets", "./assets")
+	router.LoadHTMLGlob("templates/*/*")
+	//router.LoadHTMLGlob("templates/*")
+	//router.LoadHTMLGlob("templates/layout/*")
 
 	// ミドルウエアを使う
 	router.Use(middleware.CommonMiddleware())
@@ -97,30 +100,31 @@ func main() {
 		fmt.Println(loginId)
 		fmt.Println(password)
 
-		//var user model.Users
-		//if result := connection.Where("login_id = ? and password = ?", loginId, password).First(&user); result.Error != nil {
-		//	// ここでエラーハンドリング
-		//	fmt.Println("error")
-		//	// 認証できなかったらログインフォームの表示
-		//	c.HTML(http.StatusOK, "login.tmpl", gin.H{
-		//		"title":   "login page",
-		//		"message": "",
-		//	})
-		//} else {
-		//	// レコードが存在した
-		//	fmt.Println("##### connection result #####")
-		//	fmt.Println(result.Value)
-		//	fmt.Println("##### connection result #####")
-		//
-		//	var random, _ = MakeRandomStr(10)
-		//
-		//	fmt.Println(random)
-		//
-		//	//セッションにデータを格納する
-		//	authntication.Login(c, random)
-		//
-		//	fmt.Println("Login")
-		//}
+		var user model.Users
+		if result := connection.Where("login_id = ? and password = ?", loginId, password).First(&user); result.Error != nil {
+			// ここでエラーハンドリング
+			fmt.Println("error")
+			// 認証できなかったらログインフォームの表示
+			c.HTML(http.StatusOK, "view/login.tmpl", gin.H{
+				"title":   "login page",
+				"message": "",
+			})
+		} else {
+			// レコードが存在した
+			fmt.Println("##### connection result #####")
+			fmt.Println(result.Value)
+			fmt.Println("##### connection result #####")
+			//
+			var random, _ = MakeRandomStr(10)
+			fmt.Println(random)
+			//
+			////セッションにデータを格納する
+			authntication.Login(c, random)
+			//authntication.Login(c, random)
+			//
+			fmt.Println("Login")
+			c.Redirect(http.StatusSeeOther, "/")
+		}
 
 		fmt.Println("/login POST")
 	})
@@ -128,10 +132,50 @@ func main() {
 	// logout
 	router.GET("/logout", func(c *gin.Context) {
 		authntication.Logout(c)
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
+		c.HTML(http.StatusOK, "templates/view/admin_articles_index.tmpl", gin.H{
 			"title": "Main website11",
 		})
 		fmt.Println("/logout")
+	})
+
+	// 管理 入口
+	router.GET("/admin", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "admin_index.tmpl", gin.H{
+			"title": "管理 入口",
+		})
+		fmt.Println("/admin")
+	})
+
+	// 記事管理 ダッシュボード
+	router.GET("/admin/articles", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "admin_articles_index.tmpl", gin.H{
+			"title": "記事管理 ダッシュボード",
+		})
+		fmt.Println("/admin/articles")
+	})
+
+	// 記事の一覧
+	router.GET("/admin/articles/list", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "admin_articles_list.tmpl", gin.H{
+			"title": "記事の一覧",
+		})
+		fmt.Println("/admin/articles/list")
+	})
+
+	// 記事の投稿
+	router.GET("/admin/articles/new", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "admin_articles_new.tmpl", gin.H{
+			"title": "記事の投稿",
+		})
+		fmt.Println("/admin/articles/new")
+	})
+
+	// 記事の編集
+	router.GET("/admin/articles/edit", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "admin_articles_edit.tmpl", gin.H{
+			"title": "記事の編集",
+		})
+		fmt.Println("/admin/articles/edit")
 	})
 
 	// file list
@@ -139,7 +183,7 @@ func main() {
 		"/file",
 		middleware.AuthCheckMiddleware(),
 		func(c *gin.Context) {
-			c.HTML(http.StatusOK, "file.tmpl", gin.H{
+			c.HTML(http.StatusOK, "templates/view/file.tmpl", gin.H{
 				"title": "file list page",
 			})
 			fmt.Println("/file")
@@ -148,7 +192,7 @@ func main() {
 
 	// file upload
 	router.GET("/file/upload", middleware.AuthCheckMiddleware(), func(c *gin.Context) {
-		c.HTML(http.StatusOK, "file_upload.tmpl", gin.H{
+		c.HTML(http.StatusOK, "templates/view/file_upload.tmpl", gin.H{
 			"title": "file upload page",
 		})
 		fmt.Println("/file/upload")
