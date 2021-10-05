@@ -38,7 +38,16 @@ services:
       - "6379:6379"
     volumes:
       - "./redis/data/redis:/data"
-
+  #code-server
+#  code:
+#    image: codercom/code-server
+#    restart: unless-stopped
+#    environment:
+#      PASSWORD: "password"
+#    ports:
+#      - 8080:8080
+#    volumes:
+#      - ./app:/go/src/github.com/docker_go_nginx/app
   # phpMyAdmin
 #  phpmyadmin:
 #    container_name: test_phpmyadmin
