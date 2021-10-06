@@ -1,49 +1,9 @@
 {{template "admin_header" .}}
+<div class="container">
+    <div class="row">
+        <a href="/admin/articles/list" class="btn btn-primary">一覧</a>
+        <a href="/admin/articles/new" class="btn btn-primary">新規登録</a>
+    </div>
 
-<div class="container bg-light">
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">公開・非公開</th>
-            <th scope="col">更新日時</th>
-            <th scope="col">タイトル</th>
-            <th scope="col">本文</th>
-            <th scope="col">作成者</th>
-            <th scope="col">&nbsp</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">公開</th>
-            <td>2021年11月11日</td>
-            <td>メイド萌について</td>
-            <td>あへあへあへあへあはへあへあへ</td>
-            <td>きりしー</td>
-            <th scope="col">
-                <a href="/admin/articles/edit" class="btn btn-dark">編集</a>
-            </th>
-        </tr>
-        <tr>
-            <th scope="row">非公開</th>
-            <td>2021年11月11日</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>管理者</td>
-            <th scope="col">
-                <a href="/admin/articles/edit" class="btn btn-primary stretched-link">編集</a>
-            </th>
-        </tr>
-        <tr>
-            <th scope="row">公開</th>
-            <td>2021年11月11日</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
-            <td>管理者２</td>
-            <th scope="col">
-                <a href="/admin/articles/edit" class="btn btn-primary stretched-link">編集</a>
-            </th>
-        </tr>
-        </tbody>
-    </table>
 </div>
 {{template "admin_footer"}}

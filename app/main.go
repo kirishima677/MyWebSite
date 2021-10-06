@@ -9,11 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	_ "go.uber.org/zap"
+	"goMyWebSite/controller/admin"
+	"goMyWebSite/controller/user"
 	"goMyWebSite/db"
+	"goMyWebSite/middleware"
 	"goMyWebSite/model"
 	"goMyWebSite/redis"
-
-	"goMyWebSite/middleware"
 
 	"goMyWebSite/services/authntication"
 	"net/http"
@@ -78,12 +79,12 @@ func main() {
 	// ミドルウエアを使う
 	router.Use(middleware.CommonMiddleware())
 
+	/**
+	 * ユーザー系
+	 */
+
 	// index
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"title": "Main website",
-		})
-	})
+	router.GET("/", user_controller.Index)
 
 	// login
 	router.GET("/login", func(c *gin.Context) {
@@ -138,65 +139,23 @@ func main() {
 		fmt.Println("/logout")
 	})
 
+	/**
+	 * 管理系
+	 */
 	// 管理 入口
-	router.GET("/admin", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "admin_index.tmpl", gin.H{
-			"title": "管理 入口",
-		})
-		fmt.Println("/admin")
-	})
-
+	router.GET("/admin", admin_controller.AdminIndex)
 	// 記事管理 ダッシュボード
-	router.GET("/admin/articles", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "admin_articles_index.tmpl", gin.H{
-			"title": "記事管理 ダッシュボード",
-		})
-		fmt.Println("/admin/articles")
-	})
-
+	router.GET("/admin/articles", admin_controller.AdminArticlesControllerIndex)
 	// 記事の一覧
-	router.GET("/admin/articles/list", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "admin_articles_list.tmpl", gin.H{
-			"title": "記事の一覧",
-		})
-		fmt.Println("/admin/articles/list")
-	})
-
+	router.GET("/admin/articles/list", admin_controller.AdminArticlesControllerList)
 	// 記事の投稿
-	router.GET("/admin/articles/new", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "admin_articles_new.tmpl", gin.H{
-			"title": "記事の投稿",
-		})
-		fmt.Println("/admin/articles/new")
-	})
-
+	router.GET("/admin/articles/new", admin_controller.AdminArticlesControllerNew)
+	router.POST("/admin/articles/new", admin_controller.AdminArticlesControllerNewPost)
 	// 記事の編集
-	router.GET("/admin/articles/edit", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "admin_articles_edit.tmpl", gin.H{
-			"title": "記事の編集",
-		})
-		fmt.Println("/admin/articles/edit")
-	})
-
-	// file list
-	router.GET(
-		"/file",
-		middleware.AuthCheckMiddleware(),
-		func(c *gin.Context) {
-			c.HTML(http.StatusOK, "templates/view/file.tmpl", gin.H{
-				"title": "file list page",
-			})
-			fmt.Println("/file")
-		},
-	)
-
-	// file upload
-	router.GET("/file/upload", middleware.AuthCheckMiddleware(), func(c *gin.Context) {
-		c.HTML(http.StatusOK, "templates/view/file_upload.tmpl", gin.H{
-			"title": "file upload page",
-		})
-		fmt.Println("/file/upload")
-	})
+	router.GET("/admin/articles/edit", admin_controller.AdminArticlesControllerEdit)
+	router.POST("/admin/articles/edit", admin_controller.AdminArticlesControllerEdit)
+	// 記事の削除
+	router.DELETE("/admin/articles/delete", admin_controller.AdminArticlesControllerDelete)
 
 	//起動とサーバーポートの指定
 	router.Run(":3000")

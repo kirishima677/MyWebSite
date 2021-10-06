@@ -1,3 +1,36 @@
 {{template "admin_header" .}}
 
+{{/* ループはrange, ドットで要素にアクセス, endで終了 */}}
+<div class="container bg-light">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">公開・非公開</th>
+            <th scope="col">更新日時</th>
+            <th scope="col">タイトル</th>
+            <th scope="col">本文</th>
+            <th scope="col">作成者</th>
+            <th scope="col">&nbsp</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range $index, $article := .list}}
+        <tr>
+            {{if $article.ReleaseFlg}}
+            <th scope="row">公開</th>
+            {{else}}
+            <th scope="row">非公開</th>
+            {{end}}
+            <td>{{$article.UpdatedAt.Format "2006/1/2 15:04:05"}}</td>{{/* 日付のフォーマット指定 */}}
+            <td>{{$article.Title}}</td>
+            <td>{{$article.Body}}</td>
+            <td>{{$article.PostedUserId}}</td>
+            <th scope="col">
+                <a href="/admin/articles/edit?id={{$article.ID}}" class="btn btn-dark">編集</a>
+            </th>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>
 {{template "admin_footer"}}
