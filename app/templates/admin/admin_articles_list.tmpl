@@ -21,7 +21,8 @@
             {{else}}
             <th scope="row">非公開</th>
             {{end}}
-            <td>{{$article.UpdatedAt.Format "2006/1/2 15:04:05"}}</td>{{/* 日付のフォーマット指定 */}}
+            <td>{{$article.UpdatedAt.Format "2006/1/2 15:04:05"}}</td>
+            {{/* 日付のフォーマット指定 */}}
             <td>{{$article.Title}}</td>
             <td>{{$article.Body}}</td>
             <td>{{$article.PostedUserId}}</td>
@@ -33,4 +34,16 @@
         </tbody>
     </table>
 </div>
+
+{{.pagination.RowCount}}
+{{$loopCount := add .pagination.RowCount .pagination.Limit}}
+{{$loopCount}}
+{{floor 9.11}}
+{{ceil 9.11}}
+{{round 9.5}}
+
+<div class="container">
+{{generatePaginatorLink .pagination.Path .pagination.RowCount .pagination.Offset .pagination.Limit }}
+</div>
+
 {{template "admin_footer"}}

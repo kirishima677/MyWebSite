@@ -7,6 +7,17 @@ import (
 	"goMyWebSite/model"
 )
 
+func GetArticlesListRowCountService() int64 {
+	connection := db.Connection()
+	defer connection.Close()
+
+	var articles model.Articles
+	var count int64
+	connection.Model(&articles).Count(&count)
+
+	return count
+}
+
 func GetArticlesListService(offset int, limit int) *gorm.DB {
 
 	connection := db.Connection()

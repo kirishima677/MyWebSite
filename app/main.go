@@ -12,10 +12,10 @@ import (
 	"goMyWebSite/controller/admin"
 	"goMyWebSite/controller/user"
 	"goMyWebSite/db"
+	"goMyWebSite/lib/util/templates_util"
 	"goMyWebSite/middleware"
 	"goMyWebSite/model"
 	"goMyWebSite/redis"
-
 	"goMyWebSite/services/authntication"
 	"net/http"
 )
@@ -70,6 +70,9 @@ func main() {
 	// セッションCookieの設定
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
+
+	// テンプレートに独自関数を追加
+	router.SetFuncMap(templates_util.GetTemplateFunctions())
 
 	router.Static("/assets", "./assets")
 	router.LoadHTMLGlob("templates/*/*")

@@ -17,14 +17,35 @@ func AdminArticlesControllerIndex(c *gin.Context) {
 	fmt.Println("/admin/articles")
 }
 
+type paginationInfo struct {
+	RowCount int
+	Offset   int
+	Limit    int
+	Path     string
+}
+
 func AdminArticlesControllerList(c *gin.Context) {
 
-	var offset int = 0
-	var limit int = 5
+	var offset, _ = strconv.Atoi(c.Query("offset"))
+	var limit, _ = strconv.Atoi(c.Query("limit"))
+
+	if limit <= 0 {
+		limit = 5
+	}
+
+	rowCount := admin_services.GetArticlesListRowCountService()
 	result := admin_services.GetArticlesListService(offset, limit)
+
+	pagination := paginationInfo{}
+	pagination.RowCount = int(rowCount)
+	pagination.Offset = offset
+	pagination.Limit = limit
+	pagination.Path = "/admin/articles/list"
+
 	c.HTML(http.StatusOK, "admin_articles_list.tmpl", gin.H{
-		"title": "記事の一覧",
-		"list":  result.Value,
+		"title":      "記事の一覧",
+		"list":       result.Value,
+		"pagination": pagination,
 	})
 
 	fmt.Println("/admin/articles/list")
