@@ -38,6 +38,13 @@ services:
       - "6379:6379"
     volumes:
       - "./redis/data/redis:/data"
+  dynamodb:
+    image: "amazon/dynamodb-local"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./dynamodb/data:/home/dynamodblocal/data
+    command: -jar DynamoDBLocal.jar -dbPath ./data -sharedDb
   #code-server
 #  code:
 #    image: codercom/code-server
