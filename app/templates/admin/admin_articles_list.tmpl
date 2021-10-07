@@ -35,13 +35,6 @@
     </table>
 </div>
 
-{{.pagination.RowCount}}
-{{$loopCount := add .pagination.RowCount .pagination.Limit}}
-{{$loopCount}}
-{{floor 9.11}}
-{{ceil 9.11}}
-{{round 9.5}}
-
 <div class="container">
 {{generatePaginatorLink .pagination.Path .pagination.RowCount .pagination.Offset .pagination.Limit }}
 </div>
