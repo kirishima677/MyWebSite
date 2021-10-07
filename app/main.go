@@ -156,9 +156,9 @@ func main() {
 	router.POST("/admin/articles/new", admin_controller.AdminArticlesControllerNewPost)
 	// 記事の編集
 	router.GET("/admin/articles/edit", admin_controller.AdminArticlesControllerEdit)
-	router.POST("/admin/articles/edit", admin_controller.AdminArticlesControllerEdit)
+	router.POST("/admin/articles/edit", admin_controller.AdminArticlesControllerEditPost)
 	// 記事の削除
-	router.DELETE("/admin/articles/delete", admin_controller.AdminArticlesControllerDelete)
+	router.POST("/admin/articles/delete", admin_controller.AdminArticlesControllerDelete)
 
 	//起動とサーバーポートの指定
 	router.Run(":3000")

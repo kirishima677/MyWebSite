@@ -3,29 +3,55 @@
     EasyMDE をテキストエリアに使っている
     https://qiita.com/blue_islands/items/cafd076d6992c4a100e7
     -->
-    <form method="post">
+    <form method="post" id="component-edit-form" action="">
+        <input type="hidden" name="id" value="{{.articles.ID}}">
         <div class="form-group">
             <select name="release_flg" class="form-control" id="exampleFormControlSelect1">
+            {{if eq .articles.ReleaseFlg true}}
                 <option value="false">非公開</option>
+                <option value="true" selected>公開</option>
+            {{else}}
+                <option value="false" selected>非公開</option>
                 <option value="true">公開</option>
+            {{end}}
+
             </select>
         </div>
         <div class="form-group">
             <label for="exampleFormControlInput1">タイトル</label>
-            <input type="input" name="title" class="form-control" id="exampleFormControlInput1" placeholder="記事のタイトルを入力してください">
+            <input type="input" name="title" class="form-control" id="exampleFormControlInput1" placeholder="記事のタイトルを入力してください" value="{{.articles.Title}}">
         </div>
         <div class="form-group">
             <label for="exampleFormControlTextarea1">本文</label>
             <textarea name="body" class="form-control" id="exampleFormControlTextarea1" rows="3"
-                      placeholder="記事の本文"></textarea>
+                      placeholder="記事の本文">{{.articles.Body}}</textarea>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary mb-2" onclick="confirm('登録します？')">登録</button>
-            <button type="submit" class="btn btn-primary mb-2" onclick="confirm('削除します？')">削除</button>
+            <button type="button" class="btn btn-primary mb-2" id="component-accept-btn">登録</button>
+            <button type="button" class="btn btn-primary mb-2" id="component-delete-btn">削除</button>
         </div>
     </form>
 
+    <form method="post" id="component-delete-form" action="/admin/articles/delete">
+        <input type="hidden" name="id" value="{{.articles.ID}}">
+    </form>
     <script>
+        // EasyMDE
         var easyMDE = new EasyMDE({element: document.getElementById('exampleFormControlTextarea1')});
+
+        // イベント
+        $('#component-accept-btn').on('click', function() {
+            if(confirm('登録します？')){
+                console.log("登録");
+                $('#component-edit-form').submit();
+            }
+        });
+
+        $('#component-delete-btn').on('click', function() {
+            if(confirm('削除します？')){
+                console.log("削除");
+                $('#component-delete-form').submit();
+            }
+        });
     </script>
 {{end}}
