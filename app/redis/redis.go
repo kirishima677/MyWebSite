@@ -6,7 +6,7 @@ import (
 
 // Connection
 func Connection() redis.Conn {
-	const Addr = "gomywebsite_redis_1:6379"
+	const Addr = "mywebsite-redis-1:6379"
 
 	c, err := redis.Dial("tcp", Addr)
 	if err != nil {
